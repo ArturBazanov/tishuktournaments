@@ -216,7 +216,7 @@
       font-weight: 700;
       color: var(--bone);
     }
-    .podium { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 3px; }
+    .podium { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px; }
     .podium-card {
       position: relative;
       padding: 3rem 2rem;
@@ -708,6 +708,34 @@
     }
     .h-captcha { margin-bottom: 0.5rem; filter: brightness(0.9); }
 
+    .discord-wrap {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      flex: 1;
+      min-width: 0;
+    }
+    .discord-wrap .at-sign {
+      display: flex;
+      align-items: center;
+      padding: 0 0.5rem 0 0.7rem;
+      background: rgba(192,57,43,0.1);
+      border-top: 1px solid rgba(212,207,200,0.1);
+      border-bottom: 1px solid rgba(212,207,200,0.1);
+      border-left: 1px solid rgba(212,207,200,0.1);
+      color: var(--blood);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: bold;
+      user-select: none;
+      flex-shrink: 0;
+    }
+    .discord-wrap .seg-input {
+      border-left: none !important;
+      flex: 1;
+      min-width: 0;
+    }
+
     /* ── COUNTDOWN ── */
     .countdown-section {
       background: var(--void);
@@ -816,6 +844,56 @@
     @media (max-width: 600px) {
       .countdown-units { gap: 0; }
       .cu { min-width: 60px; }
+
+      /* Reg form padding */
+      .reg-form { padding: 1.5rem 1rem; }
+      .reg-deadline-banner { min-width: unset; width: 100%; box-sizing: border-box; font-size: 0.58rem; }
+
+      /* Player rows — stack vertically on mobile */
+      .player-row {
+        grid-template-columns: 32px 1fr;
+      }
+      .seg-row {
+        flex-wrap: wrap;
+        gap: 2px;
+      }
+      .seg-input {
+        flex: 1 1 80px;
+        min-width: 60px;
+        font-size: 0.68rem;
+        padding: 0.7rem 0.5rem;
+      }
+      .seg-sep {
+        padding: 0 0.35rem;
+        font-size: 0.9rem;
+      }
+      .discord-wrap {
+        flex: 1 1 80px;
+        min-width: 70px;
+      }
+      .discord-wrap .at-sign {
+        padding: 0 0.3rem 0 0.4rem;
+        font-size: 0.75rem;
+      }
+
+      /* Showmatch — 2 columns instead of 4 */
+      .showmatch-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+      }
+      .sm-checkbox {
+        padding: 0.6rem 0.6rem;
+      }
+      .sm-cb-label {
+        font-size: 0.55rem;
+      }
+      .field-sublabel {
+        font-size: 0.5rem;
+      }
+
+      /* Submit row */
+      .reg-submit-row { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .reg-btn { width: 100%; text-align: center; }
     }
 
     /* Cinematic banner */
@@ -944,16 +1022,16 @@
     <h2 class="section-title">Распределение призов</h2>
   </div>
   <div class="podium">
-    <div class="podium-card silver-card">
-      <span class="bg-num">2</span>
-      <p class="podium-rank">2 место</p>
-      <p class="podium-pts">15 000</p>
-      <p class="podium-label">PTS</p>
-    </div>
     <div class="podium-card gold-card">
       <span class="bg-num">1</span>
       <p class="podium-rank">1 место</p>
       <p class="podium-pts">25 000</p>
+      <p class="podium-label">PTS</p>
+    </div>
+    <div class="podium-card silver-card">
+      <span class="bg-num">2</span>
+      <p class="podium-rank">2 место</p>
+      <p class="podium-pts">15 000</p>
       <p class="podium-label">PTS</p>
     </div>
     <div class="podium-card bronze-card">
@@ -1072,7 +1150,7 @@
             <span class="seg-sep">/</span>
             <input class="reg-input seg-input" id="p1b" placeholder="Account ID" maxlength="40" autocomplete="off">
             <span class="seg-sep">/</span>
-            <input class="reg-input seg-input" id="p1c" placeholder="@Discord" maxlength="40" autocomplete="off">
+            <div class="discord-wrap"><span class="at-sign">@</span><input class="reg-input seg-input" id="p1c" placeholder="username" maxlength="39" autocomplete="off"></div>
           </div>
         </div>
 
@@ -1086,7 +1164,7 @@
             <span class="seg-sep">/</span>
             <input class="reg-input seg-input" id="p2b" placeholder="Account ID" maxlength="40" autocomplete="off">
             <span class="seg-sep">/</span>
-            <input class="reg-input seg-input" id="p2c" placeholder="@Discord" maxlength="40" autocomplete="off">
+            <div class="discord-wrap"><span class="at-sign">@</span><input class="reg-input seg-input" id="p2c" placeholder="username" maxlength="39" autocomplete="off"></div>
           </div>
         </div>
         <div class="player-row" style="margin-bottom:0.5rem;">
@@ -1096,7 +1174,7 @@
             <span class="seg-sep">/</span>
             <input class="reg-input seg-input" id="p3b" placeholder="Account ID" maxlength="40" autocomplete="off">
             <span class="seg-sep">/</span>
-            <input class="reg-input seg-input" id="p3c" placeholder="@Discord" maxlength="40" autocomplete="off">
+            <div class="discord-wrap"><span class="at-sign">@</span><input class="reg-input seg-input" id="p3c" placeholder="username" maxlength="39" autocomplete="off"></div>
           </div>
         </div>
         <div class="player-row" style="margin-bottom:0.5rem;">
@@ -1106,7 +1184,7 @@
             <span class="seg-sep">/</span>
             <input class="reg-input seg-input" id="p4b" placeholder="Account ID" maxlength="40" autocomplete="off">
             <span class="seg-sep">/</span>
-            <input class="reg-input seg-input" id="p4c" placeholder="@Discord" maxlength="40" autocomplete="off">
+            <div class="discord-wrap"><span class="at-sign">@</span><input class="reg-input seg-input" id="p4c" placeholder="username" maxlength="39" autocomplete="off"></div>
           </div>
         </div>
         <div class="field-hint">Укажите Discord-тег (@username) для всех игроков.</div>
@@ -1246,12 +1324,17 @@
     return nick || ('Игрок ' + n);
   }
 
+  function gDiscord(id) {
+    const v = document.getElementById(id).value.trim();
+    return v ? '@' + v : '';
+  }
+
   function buildMessage() {
     const team = g('teamName');
-    const p1 = [g('p1a'), g('p1b'), g('p1c')].filter(Boolean).join(' / ');
-    const p2 = [g('p2a'), g('p2b'), g('p2c')].filter(Boolean).join(' / ');
-    const p3 = [g('p3a'), g('p3b'), g('p3c')].filter(Boolean).join(' / ');
-    const p4 = [g('p4a'), g('p4b'), g('p4c')].filter(Boolean).join(' / ');
+    const p1 = [g('p1a'), g('p1b'), gDiscord('p1c')].filter(Boolean).join(' / ');
+    const p2 = [g('p2a'), g('p2b'), gDiscord('p2c')].filter(Boolean).join(' / ');
+    const p3 = [g('p3a'), g('p3b'), gDiscord('p3c')].filter(Boolean).join(' / ');
+    const p4 = [g('p4a'), g('p4b'), gDiscord('p4c')].filter(Boolean).join(' / ');
 
     const sel2 = get2x2();
     const sel1 = get1x1();
