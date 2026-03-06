@@ -1409,25 +1409,188 @@
 </footer>
 
 <script>
+// ══ I18N CORE (must load first) ══════════════════════════════════
+const TRANSLATIONS = {
+  ru: {
+    org_tag:          'Tishuk Tournaments — presents',
+    meta_format:      'Формат',
+    meta_date:        'Дата',
+    meta_prize:       'Призовой фонд',
+    meta_org:         'Организатор',
+    prizes_kicker:    '— Призовые места —',
+    prizes_title:     'Распределение призов',
+    place_1:          '1 место',
+    place_2:          '2 место',
+    place_3:          '3 место',
+    cb_eyebrow:       '— После основного турнира —',
+    cb_title:         'Шоу‑Матчи',
+    cb_sub:           'Лучшие сразятся ещё раз',
+    sm_num1:          'Шоу-матч 01',
+    sm_num2:          'Шоу-матч 02',
+    sm_rule1a:        'Команды выставляют по два игрока. Мини-турнир из трёх игр в формате round robin.',
+    sm_rule1b:        'Победившая команда получает',
+    sm_rule1b2:       'к своему призу.',
+    sm_hi1:           'Top 3 команды · Round Robin · 3 игры',
+    sm_rule2a:        'Аналогичный формат, но игрок не должен был участвовать в 2×2.',
+    sm_rule2b:        'Победитель добавляет своей команде ещё',
+    sm_hi2:           'Новый участник · Round Robin · 3 игры',
+    cd_eyebrow:       '— До начала турнира —',
+    cd_days:          'Дней',
+    cd_hours:         'Часов',
+    cd_mins:          'Минут',
+    cd_secs:          'Секунд',
+    cd_date:          '21 марта 2026, 19:00 МСК',
+    hero_date:        '21 марта 2026 · 19:00 МСК',
+    reg_kicker:       '— Участие —',
+    reg_title:        'Регистрация команды',
+    reg_hint:         'Заполните каждое поле. Разделители <span style="color:var(--blood);font-style:normal;">/</span> проставляются автоматически. Вопросы — в нашем',
+    reg_discord_link: 'Discord',
+    field_01:         '01 &nbsp;·&nbsp; Название команды',
+    field_02:         '02 &nbsp;·&nbsp; Состав',
+    field_03:         '03 &nbsp;·&nbsp; Шоу-матчи',
+    team_placeholder: 'Введите название команды',
+    captain_label:    'Капитан',
+    player1_label:    'Игрок 1',
+    players24_label:  'Игроки 2 – 4',
+    discord_hint:     'Укажите Discord-тег (@username) для всех игроков.',
+    sm_hint:          'Выберите игроков, которые будут участвовать в шоу-матчах. Игрок в 1×1 не должен участвовать в 2×2.',
+    sm2x2_label:      'Шоу-матч 2×2',
+    sm2x2_sub:        'выберите 2 игрока',
+    sm1x1_label:      'Шоу-матч 1×1',
+    sm1x1_sub:        'выберите 1 игрока (не из 2×2)',
+    preview_label:    'Предпросмотр заявки',
+    preview_sub:      'Так выглядит ваша заявка',
+    login_btn:        'Войти через Discord',
+    auth_hint:        'Требуется для защиты от повторных заявок',
+    submit_btn:       'Отправить заявку',
+    footer_copy:      '© 2026 — MegaSplit Full 4×4 · 21.03.2026, 19:00 МСК',
+    tournament_started: 'Турнир начался! 🏆',
+    err_duplicate:    '😂 Э уёбок, ты уже подал заявку, а ну пшёл вон',
+    err_team_exists:  '⛔ Команда с таким названием уже зарегистрирована',
+    err_not_in_guild: '⛔ Вы должны быть участником сервера TISHUK TOURNAMENTS в Discord',
+    success_msg:      '✓ Заявка успешно отправлена!',
+    submit_sending:   'Отправка…',
+    cooldown_msg:       '⏱ Следующая заявка через',
+    reg_closed:         '⛔ Регистрация закрыта',
+    reg_closing_in:     'Регистрация закрывается через:',
+    reg_closing_urgent: '⚠ Регистрация закрывается через:',
+    reg_closed_btn:     'Регистрация закрыта',
+    err_no_session:     '⚠ Сначала войдите через Discord',
+    err_too_early:      '⏱ Слишком рано. Дождитесь окончания cooldown.',
+    err_fill_fields:    '⚠ Заполните все поля перед отправкой',
+    err_captcha:        '⚠ Пройдите проверку hCaptcha',
+    err_send:           'Ошибка отправки. Попробуйте ещё раз.',
+    preview_registered: 'Зарегистрировал',
+    days_short:         'д',
+    meta_val_date:      '21.03.2026, 19:00 МСК',
+    auth_warning:       'После отправки заявки, вы ещё раз закинуть не сможете,\nвы даже повторно авторизоваться не сможете (лохи)',
+    footer_error:       'наебнулись и отправили заявку с ошибкой? обращайтесь к соулесу в дискорде',
+    overlay_auth:       'Сначала авторизуйся через Discord',
+    warn_2x2_max:       '⚠ Максимум 2 игрока',
+    warn_1x1_max:       '⚠ Только 1 игрок',
+    warn_2x2_exact:     '⚠ Выберите ровно 2 игрока для 2×2',
+    warn_1x1_exact:     '⚠ Выберите 1 игрока для 1×1',
+  },
+  en: {
+    org_tag:          'Tishuk Tournaments — presents',
+    meta_format:      'Format',
+    meta_date:        'Date',
+    meta_prize:       'Prize Pool',
+    meta_org:         'Organizer',
+    prizes_kicker:    '— Prize Places —',
+    prizes_title:     'Prize Distribution',
+    place_1:          '1st place',
+    place_2:          '2nd place',
+    place_3:          '3rd place',
+    cb_eyebrow:       '— After the main tournament —',
+    cb_title:         'Show Matches',
+    cb_sub:           'The best will clash once more',
+    sm_num1:          'Show Match 01',
+    sm_num2:          'Show Match 02',
+    sm_rule1a:        'Teams send two players each. Mini-tournament of three games in round robin format.',
+    sm_rule1b:        'The winning team receives',
+    sm_rule1b2:       'added to their prize.',
+    sm_hi1:           'Top 3 teams · Round Robin · 3 games',
+    sm_rule2a:        'Same format, but the player must not have participated in the 2×2.',
+    sm_rule2b:        'The winner adds another',
+    sm_hi2:           'New participant · Round Robin · 3 games',
+    cd_eyebrow:       '— Until the tournament starts —',
+    cd_days:          'Days',
+    cd_hours:         'Hours',
+    cd_mins:          'Minutes',
+    cd_secs:          'Seconds',
+    cd_date:          'March 21, 2026, 19:00 MSK',
+    hero_date:        'March 21, 2026 · 19:00 MSK',
+    reg_kicker:       '— Participation —',
+    reg_title:        'Team Registration',
+    reg_hint:         'Fill in every field. Separators <span style="color:var(--blood);font-style:normal;">/</span> are added automatically. Questions — in our',
+    reg_discord_link: 'Discord',
+    field_01:         '01 &nbsp;·&nbsp; Team Name',
+    field_02:         '02 &nbsp;·&nbsp; Roster',
+    field_03:         '03 &nbsp;·&nbsp; Show Matches',
+    team_placeholder: 'Enter team name',
+    captain_label:    'Captain',
+    player1_label:    'Player 1',
+    players24_label:  'Players 2 – 4',
+    discord_hint:     'Provide the Discord tag (@username) for all players.',
+    sm_hint:          'Select players who will participate in show matches. The 1×1 player must not participate in the 2×2.',
+    sm2x2_label:      'Show Match 2×2',
+    sm2x2_sub:        'choose 2 players',
+    sm1x1_label:      'Show Match 1×1',
+    sm1x1_sub:        'choose 1 player (not from 2×2)',
+    preview_label:    'Application Preview',
+    preview_sub:      'This is how your application looks',
+    login_btn:        'Log in via Discord',
+    auth_hint:        'Required to prevent duplicate submissions',
+    submit_btn:       'Submit Application',
+    footer_copy:      '© 2026 — MegaSplit Full 4×4 · 21.03.2026, 19:00 MSK',
+    tournament_started: 'Tournament has started! 🏆',
+    err_duplicate:    '😂 Bro you already submitted, get outta here',
+    err_team_exists:  '⛔ A team with this name is already registered',
+    err_not_in_guild: '⛔ You must be a member of the TISHUK TOURNAMENTS Discord server to register',
+    success_msg:      '✓ Application submitted successfully!',
+    submit_sending:   'Sending…',
+    cooldown_msg:       '⏱ Next submission in',
+    reg_closed:         '⛔ Registration closed',
+    reg_closing_in:     'Registration closes in:',
+    reg_closing_urgent: '⚠ Registration closes in:',
+    reg_closed_btn:     'Registration closed',
+    err_no_session:     '⚠ Please log in via Discord first',
+    err_too_early:      '⏱ Too soon. Wait for the cooldown to expire.',
+    err_fill_fields:    '⚠ Please fill in all fields before submitting',
+    err_captcha:        '⚠ Please complete the hCaptcha check',
+    err_send:           'Submission error. Please try again.',
+    preview_registered: 'Registered by',
+    days_short:         'd',
+    meta_val_date:      '21.03.2026, 19:00 MSK',
+    auth_warning:       'Once submitted, you won\'t be able to do it again,\nyou won\'t even be able to re-authenticate (losers)',
+    footer_error:       'messed up and submitted with an error? contact the admin on Discord',
+    overlay_auth:       'Log in via Discord first',
+    warn_2x2_max:       '⚠ Max 2 players',
+    warn_1x1_max:       '⚠ Only 1 player',
+    warn_2x2_exact:     '⚠ Select exactly 2 players for 2×2',
+    warn_1x1_exact:     '⚠ Select 1 player for 1×1',
+  }
+};
+
+let currentLang = localStorage.getItem('tt_lang') || 'ru';
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('tt_lang', lang);
+  document.getElementById('btnRu').classList.toggle('active', lang === 'ru');
+  document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+  applyLang(lang);
+}
+
+function t(key) {
+  return TRANSLATIONS[currentLang][key] || TRANSLATIONS.ru[key] || key;
+}
+</script>
+
+<script>
   // ══ КОНФИГ — замени на свой Worker URL после деплоя ══
   const WORKER_URL = 'https://tishuk-auth.artur-bazanov123.workers.dev';
-
-  // Локальный хелпер перевода для этого скрипта (TRANSLATIONS грузится ниже)
-  function tr(key) {
-    if (typeof TRANSLATIONS !== 'undefined') {
-      const lang = localStorage.getItem('tt_lang') || 'ru';
-      return (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) || (TRANSLATIONS.ru && TRANSLATIONS.ru[key]) || key;
-    }
-    // Фолбэк до загрузки TRANSLATIONS
-    const fallback = {
-      reg_closed:         '⛔ Регистрация закрыта',
-      reg_closed_btn:     'Регистрация закрыта',
-      reg_closing_in:     'Регистрация закрывается через:',
-      reg_closing_urgent: '⚠ Регистрация закрывается через:',
-      days_short:         'д',
-    };
-    return fallback[key] || key;
-  }
 
   const previewBox  = document.getElementById('previewBox');
   const previewText = document.getElementById('previewText');
@@ -1477,14 +1640,12 @@
     const auth   = params.get('auth');
     const sessionB64 = params.get('session');
 
-    console.log('[AUTH DEBUG] auth=', auth, 'session=', sessionB64 ? sessionB64.substring(0, 30) + '...' : null);
 
     if (auth === 'ok' && sessionB64) {
       sessionStorage.setItem('tt_discord_session', sessionB64);
       // Clean URL
       history.replaceState({}, '', location.pathname);
       const session = loadSession();
-      console.log('[AUTH DEBUG] loadSession=', session);
       if (session) showAuthed(session);
     } else if (auth === 'duplicate') {
       const username = params.get('username') || '';
@@ -1521,8 +1682,8 @@
     });
     const w2 = document.getElementById('warn2x2');
     const w1 = document.getElementById('warn1x1');
-    w2.textContent = sel2.length > 2 ? '⚠ Максимум 2 игрока' : '';
-    w1.textContent = get1x1().length > 1 ? '⚠ Только 1 игрок' : '';
+    w2.textContent = sel2.length > 2 ? t('warn_2x2_max') : '';
+    w1.textContent = get1x1().length > 1 ? t('warn_1x1_max') : '';
     updatePreview();
   }
 
@@ -1603,14 +1764,14 @@
         const h = Math.floor(remaining / 3600000);
         const m = Math.floor((remaining % 3600000) / 60000);
         const s = Math.floor((remaining % 60000) / 1000);
-        cooldownEl.textContent = `⏱ ${(typeof t === 'function' ? t('cooldown_msg') : 'Next submission in')} ${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        cooldownEl.textContent = `⏱ ${t('cooldown_msg')} ${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
         submitBtn.disabled = true;
-        submitBtn.textContent = (typeof t === 'function') ? t('submit_sending') : 'Please wait…';
+        submitBtn.textContent = t('submit_sending');
         setTimeout(updateCooldown, 1000);
       } else {
         cooldownEl.textContent = '';
         submitBtn.disabled = false;
-        submitBtn.textContent = (typeof t === 'function') ? t('submit_btn') : 'Submit';
+        submitBtn.textContent = t('submit_btn');
       }
     }
     updateCooldown();
@@ -1633,8 +1794,8 @@
       if (!g('p'+n+'b')) { markError('p'+n+'b'); ok = false; }
       if (!g('p'+n+'c')) { markError('p'+n+'c'); ok = false; }
     });
-    if (get2x2().length !== 2) { document.getElementById('warn2x2').textContent = '⚠ Выберите ровно 2 игрока для 2×2'; ok = false; }
-    if (get1x1().length !== 1) { document.getElementById('warn1x1').textContent = '⚠ Выберите 1 игрока для 1×1'; ok = false; }
+    if (get2x2().length !== 2) { document.getElementById('warn2x2').textContent = t('warn_2x2_exact'); ok = false; }
+    if (get1x1().length !== 1) { document.getElementById('warn1x1').textContent = t('warn_1x1_exact'); ok = false; }
     return ok;
   }
 
@@ -1674,8 +1835,8 @@
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = (typeof t === 'function') ? t('submit_sending') : 'Sending…';
-    regStatus.textContent = (typeof t === 'function') ? t('submit_sending') : 'Sending…';
+    submitBtn.textContent = t('submit_sending');
+    regStatus.textContent = t('submit_sending');
 
     const payload = buildPayload();
     const captchaToken = captchaEl.value;
@@ -1692,7 +1853,7 @@
       if (data.ok) {
         localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
         sessionStorage.removeItem('tt_discord_session');
-        regStatus.textContent = (typeof t === 'function') ? t('success_msg') : '✓ Submitted!';
+        regStatus.textContent = t('success_msg');
         regStatus.classList.add('success');
         allInputIds.forEach(id => { document.getElementById(id).value = ''; });
         [...sm2x2checks, ...sm1x1checks].forEach(c => { c.checked = false; });
@@ -1701,31 +1862,31 @@
         if (window.hcaptcha) window.hcaptcha.reset();
         startCooldownTicker();
       } else if (data.error === 'already_registered') {
-        regStatus.textContent = (typeof t === 'function') ? t('err_duplicate') : '⛔ Already registered';
+        regStatus.textContent = t('err_duplicate');
         regStatus.classList.add('error');
         submitBtn.disabled = false;
-        submitBtn.textContent = (typeof t === 'function') ? t('submit_btn') : 'Submit';
+        submitBtn.textContent = t('submit_btn');
       } else if (data.error === 'team_exists') {
-        regStatus.textContent = (typeof t === 'function') ? t('err_team_exists') : '⛔ Team name taken';
+        regStatus.textContent = t('err_team_exists');
         regStatus.classList.add('error');
         submitBtn.disabled = false;
-        submitBtn.textContent = (typeof t === 'function') ? t('submit_btn') : 'Submit';
+        submitBtn.textContent = t('submit_btn');
       } else if (data.error === 'not_in_guild') {
-        regStatus.textContent = (typeof t === 'function') ? t('err_not_in_guild') : '⛔ You must be a member of the TISHUK TOURNAMENTS Discord server to register';
+        regStatus.textContent = t('err_not_in_guild');
         regStatus.classList.add('error');
         submitBtn.disabled = false;
-        submitBtn.textContent = (typeof t === 'function') ? t('submit_btn') : 'Submit';
+        submitBtn.textContent = t('submit_btn');
       } else if (data.error === 'cooldown') {
         regStatus.textContent = t('cooldown_msg') + ' …';
         regStatus.classList.add('error');
         submitBtn.disabled = false;
-        submitBtn.textContent = (typeof t === 'function') ? t('submit_btn') : 'Submit';
+        submitBtn.textContent = t('submit_btn');
       } else if (data.error === 'captcha_failed') {
-        regStatus.textContent = (lang === 'en') ? '⚠ Captcha check failed. Please try again.' : '⚠ Проверка капчи не прошла. Попробуйте ещё раз.';
+        regStatus.textContent = t('err_captcha');
         regStatus.classList.add('error');
         if (window.hcaptcha) window.hcaptcha.reset();
         submitBtn.disabled = false;
-        submitBtn.textContent = (typeof t === 'function') ? t('submit_btn') : 'Submit';
+        submitBtn.textContent = t('submit_btn');
       } else {
         throw new Error(data.error);
       }
@@ -1733,7 +1894,7 @@
       regStatus.textContent = '✕ ' + t('err_send');
       regStatus.classList.add('error');
       submitBtn.disabled = false;
-      submitBtn.textContent = (typeof t === 'function') ? t('submit_btn') : 'Submit';
+      submitBtn.textContent = t('submit_btn');
     }
   });
 
@@ -1754,9 +1915,9 @@
       const now = new Date();
       const diffReg = REG_CLOSE - now;
       if (diffReg <= 0) {
-        regDeadlineEl.innerHTML = `<span style="color:var(--blood);">${tr('reg_closed')}</span>`;
+        regDeadlineEl.innerHTML = `<span style="color:var(--blood);">${t('reg_closed')}</span>`;
         const btn = document.getElementById('submitBtn');
-        if (btn) { btn.disabled = true; btn.textContent = tr('reg_closed_btn'); }
+        if (btn) { btn.disabled = true; btn.textContent = t('reg_closed_btn'); }
       } else {
         const d = Math.floor(diffReg / 86400000);
         const h = Math.floor((diffReg % 86400000) / 3600000);
@@ -1765,8 +1926,8 @@
         const urgent = diffReg < 3600000;
         regDeadlineEl.innerHTML =
           `<span style="color:${urgent ? 'var(--blood)' : 'rgba(212,207,200,0.5)'};">` +
-          `${urgent ? tr('reg_closing_urgent') : tr('reg_closing_in')} ` +
-          `<strong style="color:var(--bone);font-style:normal;">${d > 0 ? d + tr('days_short') + ' ' : ''}${pad(h)}:${pad(m)}:${pad(s)}</strong>` +
+          `${urgent ? t('reg_closing_urgent') : t('reg_closing_in')} ` +
+          `<strong style="color:var(--bone);font-style:normal;">${d > 0 ? d + t('days_short') + ' ' : ''}${pad(h)}:${pad(m)}:${pad(s)}</strong>` +
           `</span>`;
       }
     }
@@ -1784,7 +1945,7 @@
         document.getElementById('cdBar').style.width = '100%';
         const cdDateLabel = document.querySelector('.countdown-date-label');
         cdDateLabel.dataset.started = 'true';
-        cdDateLabel.textContent = (typeof t === 'function') ? t('tournament_started') : 'Tournament started! 🏆';
+        cdDateLabel.textContent = t('tournament_started');
         return;
       }
 
@@ -1821,174 +1982,6 @@
 
 <script>
 // ══ I18N — LANGUAGE SWITCHER ══════════════════════════════════════
-const TRANSLATIONS = {
-  ru: {
-    org_tag:          'Tishuk Tournaments — presents',
-    meta_format:      'Формат',
-    meta_date:        'Дата',
-    meta_prize:       'Призовой фонд',
-    meta_org:         'Организатор',
-    prizes_kicker:    '— Призовые места —',
-    prizes_title:     'Распределение призов',
-    place_1:          '1 место',
-    place_2:          '2 место',
-    place_3:          '3 место',
-    cb_eyebrow:       '— После основного турнира —',
-    cb_title:         'Шоу‑Матчи',
-    cb_sub:           'Лучшие сразятся ещё раз',
-    sm_num1:          'Шоу-матч 01',
-    sm_num2:          'Шоу-матч 02',
-    sm_rule1a:        'Команды выставляют по два игрока. Мини-турнир из трёх игр в формате round robin.',
-    sm_rule1b:        'Победившая команда получает',
-    sm_rule1b2:       'к своему призу.',
-    sm_hi1:           'Top 3 команды · Round Robin · 3 игры',
-    sm_rule2a:        'Аналогичный формат, но игрок не должен был участвовать в 2×2.',
-    sm_rule2b:        'Победитель добавляет своей команде ещё',
-    sm_hi2:           'Новый участник · Round Robin · 3 игры',
-    cd_eyebrow:       '— До начала турнира —',
-    cd_days:          'Дней',
-    cd_hours:         'Часов',
-    cd_mins:          'Минут',
-    cd_secs:          'Секунд',
-    cd_date:          '21 марта 2026, 19:00 МСК',
-    hero_date:        '21 марта 2026 · 19:00 МСК',
-    reg_kicker:       '— Участие —',
-    reg_title:        'Регистрация команды',
-    reg_hint:         'Заполните каждое поле. Разделители <span style="color:var(--blood);font-style:normal;">/</span> проставляются автоматически. Вопросы — в нашем',
-    reg_discord_link: 'Discord',
-    field_01:         '01 &nbsp;·&nbsp; Название команды',
-    field_02:         '02 &nbsp;·&nbsp; Состав',
-    field_03:         '03 &nbsp;·&nbsp; Шоу-матчи',
-    team_placeholder: 'Введите название команды',
-    captain_label:    'Капитан',
-    player1_label:    'Игрок 1',
-    players24_label:  'Игроки 2 – 4',
-    discord_hint:     'Укажите Discord-тег (@username) для всех игроков.',
-    sm_hint:          'Выберите игроков, которые будут участвовать в шоу-матчах. Игрок в 1×1 не должен участвовать в 2×2.',
-    sm2x2_label:      'Шоу-матч 2×2',
-    sm2x2_sub:        'выберите 2 игрока',
-    sm1x1_label:      'Шоу-матч 1×1',
-    sm1x1_sub:        'выберите 1 игрока (не из 2×2)',
-    preview_label:    'Предпросмотр заявки',
-    preview_sub:      'Так выглядит ваша заявка',
-    login_btn:        'Войти через Discord',
-    auth_hint:        'Требуется для защиты от повторных заявок',
-    submit_btn:       'Отправить заявку',
-    footer_copy:      '© 2026 — MegaSplit Full 4×4 · 21.03.2026, 19:00 МСК',
-    tournament_started: 'Турнир начался! 🏆',
-    err_duplicate:    '😂 Э уёбок, ты уже подал заявку, а ну пшёл вон',
-    err_team_exists:  '⛔ Команда с таким названием уже зарегистрирована',
-    err_not_in_guild: '⛔ Вы должны быть участником сервера TISHUK TOURNAMENTS в Discord',
-    success_msg:      '✓ Заявка успешно отправлена!',
-    submit_sending:   'Отправка…',
-    cooldown_msg:       '⏱ Следующая заявка через',
-    reg_closed:         '⛔ Регистрация закрыта',
-    reg_closing_in:     'Регистрация закрывается через:',
-    reg_closing_urgent: '⚠ Регистрация закрывается через:',
-    reg_closed_btn:     'Регистрация закрыта',
-    err_no_session:     '⚠ Сначала войдите через Discord',
-    err_too_early:      '⏱ Слишком рано. Дождитесь окончания cooldown.',
-    err_fill_fields:    '⚠ Заполните все поля перед отправкой',
-    err_captcha:        '⚠ Пройдите проверку hCaptcha',
-    err_send:           'Ошибка отправки. Попробуйте ещё раз.',
-    preview_registered: 'Зарегистрировал',
-    days_short:         'д',
-    meta_val_date:      '21.03.2026, 19:00 МСК',
-    auth_warning:       'После отправки заявки, вы ещё раз закинуть не сможете,\nвы даже повторно авторизоваться не сможете (лохи)',
-    footer_error:       'наебнулись и отправили заявку с ошибкой? обращайтесь к соулесу в дискорде',
-    overlay_auth:       'Сначала авторизуйся через Discord',
-  },
-  en: {
-    org_tag:          'Tishuk Tournaments — presents',
-    meta_format:      'Format',
-    meta_date:        'Date',
-    meta_prize:       'Prize Pool',
-    meta_org:         'Organizer',
-    prizes_kicker:    '— Prize Places —',
-    prizes_title:     'Prize Distribution',
-    place_1:          '1st place',
-    place_2:          '2nd place',
-    place_3:          '3rd place',
-    cb_eyebrow:       '— After the main tournament —',
-    cb_title:         'Show Matches',
-    cb_sub:           'The best will clash once more',
-    sm_num1:          'Show Match 01',
-    sm_num2:          'Show Match 02',
-    sm_rule1a:        'Teams send two players each. Mini-tournament of three games in round robin format.',
-    sm_rule1b:        'The winning team receives',
-    sm_rule1b2:       'added to their prize.',
-    sm_hi1:           'Top 3 teams · Round Robin · 3 games',
-    sm_rule2a:        'Same format, but the player must not have participated in the 2×2.',
-    sm_rule2b:        'The winner adds another',
-    sm_hi2:           'New participant · Round Robin · 3 games',
-    cd_eyebrow:       '— Until the tournament starts —',
-    cd_days:          'Days',
-    cd_hours:         'Hours',
-    cd_mins:          'Minutes',
-    cd_secs:          'Seconds',
-    cd_date:          'March 21, 2026, 19:00 MSK',
-    hero_date:        'March 21, 2026 · 19:00 MSK',
-    reg_kicker:       '— Participation —',
-    reg_title:        'Team Registration',
-    reg_hint:         'Fill in every field. Separators <span style="color:var(--blood);font-style:normal;">/</span> are added automatically. Questions — in our',
-    reg_discord_link: 'Discord',
-    field_01:         '01 &nbsp;·&nbsp; Team Name',
-    field_02:         '02 &nbsp;·&nbsp; Roster',
-    field_03:         '03 &nbsp;·&nbsp; Show Matches',
-    team_placeholder: 'Enter team name',
-    captain_label:    'Captain',
-    player1_label:    'Player 1',
-    players24_label:  'Players 2 – 4',
-    discord_hint:     'Provide the Discord tag (@username) for all players.',
-    sm_hint:          'Select players who will participate in show matches. The 1×1 player must not participate in the 2×2.',
-    sm2x2_label:      'Show Match 2×2',
-    sm2x2_sub:        'choose 2 players',
-    sm1x1_label:      'Show Match 1×1',
-    sm1x1_sub:        'choose 1 player (not from 2×2)',
-    preview_label:    'Application Preview',
-    preview_sub:      'This is how your application looks',
-    login_btn:        'Log in via Discord',
-    auth_hint:        'Required to prevent duplicate submissions',
-    submit_btn:       'Submit Application',
-    footer_copy:      '© 2026 — MegaSplit Full 4×4 · 21.03.2026, 19:00 MSK',
-    tournament_started: 'Tournament has started! 🏆',
-    err_duplicate:    '😂 Bro you already submitted, get outta here',
-    err_team_exists:  '⛔ A team with this name is already registered',
-    err_not_in_guild: '⛔ You must be a member of the TISHUK TOURNAMENTS Discord server to register',
-    success_msg:      '✓ Application submitted successfully!',
-    submit_sending:   'Sending…',
-    cooldown_msg:       '⏱ Next submission in',
-    reg_closed:         '⛔ Registration closed',
-    reg_closing_in:     'Registration closes in:',
-    reg_closing_urgent: '⚠ Registration closes in:',
-    reg_closed_btn:     'Registration closed',
-    err_no_session:     '⚠ Please log in via Discord first',
-    err_too_early:      '⏱ Too soon. Wait for the cooldown to expire.',
-    err_fill_fields:    '⚠ Please fill in all fields before submitting',
-    err_captcha:        '⚠ Please complete the hCaptcha check',
-    err_send:           'Submission error. Please try again.',
-    preview_registered: 'Registered by',
-    days_short:         'd',
-    meta_val_date:      '21.03.2026, 19:00 MSK',
-    auth_warning:       'Once submitted, you won\'t be able to do it again,\nyou won\'t even be able to re-authenticate (losers)',
-    footer_error:       'messed up and submitted with an error? contact the admin on Discord',
-    overlay_auth:       'Log in via Discord first',
-  }
-};
-
-let currentLang = localStorage.getItem('tt_lang') || 'ru';
-
-function setLang(lang) {
-  currentLang = lang;
-  localStorage.setItem('tt_lang', lang);
-  document.getElementById('btnRu').classList.toggle('active', lang === 'ru');
-  document.getElementById('btnEn').classList.toggle('active', lang === 'en');
-  applyLang(lang);
-}
-
-function t(key) {
-  return TRANSLATIONS[currentLang][key] || TRANSLATIONS.ru[key] || key;
-}
 
 function applyLang(lang) {
   const T = TRANSLATIONS[lang];
