@@ -1413,7 +1413,7 @@
       history.replaceState({}, '', location.pathname);
       // scroll to reg and show error
       document.getElementById('authBlock').querySelector('.auth-hint').innerHTML =
-        `<span style="color:var(--blood);">⛔ ${(localStorage.getItem('tt_lang') || 'ru') === 'en' ? 'Account' : 'Аккаунт'} @${username} ${(localStorage.getItem('tt_lang') || 'ru') === 'en' ? 'has already submitted an application' : 'уже подавал заявку'}</span>`;
+        `<span style="color:var(--blood);">😂 ${(localStorage.getItem('tt_lang') || 'ru') === 'en' ? 'Bro you already submitted, get outta here' : 'Э уёбок, ты уже подал заявку, а ну пшёл вон'}</span>`;
     } else if (auth === 'error') {
       history.replaceState({}, '', location.pathname);
     } else {
@@ -1775,7 +1775,7 @@ const TRANSLATIONS = {
     submit_btn:       'Отправить заявку',
     footer_copy:      '© 2026 — MegaSplit Full 4×4 · 21.03.2026, 19:00 МСК',
     tournament_started: 'Турнир начался! 🏆',
-    err_duplicate:    '⛔ Этот Discord-аккаунт уже подал заявку',
+    err_duplicate:    '😂 Э уёбок, ты уже подал заявку, а ну пшёл вон',
     err_team_exists:  '⛔ Команда с таким названием уже зарегистрирована',
     err_not_in_guild: '⛔ Вы должны быть участником сервера TISHUK TOURNAMENTS в Discord',
     success_msg:      '✓ Заявка успешно отправлена!',
@@ -1836,7 +1836,7 @@ const TRANSLATIONS = {
     submit_btn:       'Submit Application',
     footer_copy:      '© 2026 — MegaSplit Full 4×4 · 21.03.2026, 19:00 MSK',
     tournament_started: 'Tournament has started! 🏆',
-    err_duplicate:    '⛔ This Discord account has already submitted an application',
+    err_duplicate:    '😂 Bro you already submitted, get outta here',
     err_team_exists:  '⛔ A team with this name is already registered',
     err_not_in_guild: '⛔ You must be a member of the TISHUK TOURNAMENTS Discord server to register',
     success_msg:      '✓ Application submitted successfully!',
