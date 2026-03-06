@@ -1652,7 +1652,7 @@ function t(key) {
       history.replaceState({}, '', location.pathname);
       // scroll to reg and show error
       document.getElementById('authBlock').querySelector('.auth-hint').innerHTML =
-        `<span style="color:var(--blood);">😂 ${(localStorage.getItem('tt_lang') || 'ru') === 'en' ? 'Bro you already submitted, get outta here' : 'Э уёбок, ты уже подал заявку, а ну пшёл вон'}</span>`;
+        `<span style="color:var(--blood);">${t('err_duplicate')}</span>`;
     } else if (auth === 'error') {
       history.replaceState({}, '', location.pathname);
     } else {
