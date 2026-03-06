@@ -718,6 +718,38 @@
       footer { flex-direction: column; gap: 1.5rem; text-align: center; }
       .reg-submit-row { flex-direction: column; align-items: flex-start; }
     }
+    .reg-rules {
+      margin-top: 2rem;
+      text-align: left;
+      border: 1px solid rgba(212,207,200,0.08);
+      background: rgba(212,207,200,0.02);
+      padding: 1.4rem 1.8rem;
+    }
+    .reg-rules-title {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(212,207,200,0.35);
+      margin-bottom: 0.9rem;
+    }
+    .reg-rules ol {
+      margin: 0;
+      padding-left: 1.2rem;
+      list-style: decimal;
+    }
+    .reg-rules li {
+      font-size: 0.8rem;
+      color: rgba(212,207,200,0.45);
+      line-height: 1.6;
+      margin-bottom: 0.4rem;
+      font-style: italic;
+    }
+    .reg-rules li:last-child { margin-bottom: 0; }
+    .reg-rules li strong {
+      color: rgba(212,207,200,0.65);
+      font-style: normal;
+    }
     .reg-deadline-banner {
       display: inline-block;
       margin-top: 1.2rem;
@@ -1240,9 +1272,18 @@
       <h2 class="section-title" data-i18n="reg_title">Регистрация команды</h2>
       <div id="regDeadlineBanner" class="reg-deadline-banner"></div>
       <p style="font-style:italic;color:rgba(212,207,200,0.35);font-size:1rem;margin-top:1rem;">
-        Заполните каждое поле. Разделители <span style="color:var(--blood);font-style:normal;">/</span> проставляются автоматически.
-        Вопросы — в нашем <a href="https://discord.gg/hgAvaqjvRj" target="_blank" style="color:var(--blood);text-decoration:none;border-bottom:1px solid rgba(192,57,43,0.4);">Discord</a>.
+        Участники должны находиться на сервере Discord с момента подачи заявки до окончания турнира. Все детали турнира — на нашем <a href="https://discord.gg/hgAvaqjvRj" target="_blank" style="color:var(--blood);text-decoration:none;border-bottom:1px solid rgba(192,57,43,0.4);">Discord</a>.
       </p>
+
+      <div class="reg-rules">
+        <div class="reg-rules-title" data-i18n="rules_title">— Детали регистрации —</div>
+        <ol id="regRulesList">
+          <li data-i18n="rule_1">Допускаются только ники, содержащие <strong>кириллические или латинские буквы</strong>. Спецсимволы, смайлики и символы других письменностей не разрешены.</li>
+          <li data-i18n="rule_2">Ники указывайте <strong>без ошибок</strong> — они будут добавлены в <strong>«Allowed players list / Список участников»</strong>.</li>
+          <li data-i18n="rule_3">Ник должен быть <strong>защищён паролем</strong> и принадлежать вам.</li>
+          <li data-i18n="rule_4">Мы оставляем за собой право <strong>отклонить заявку без объяснения причин</strong> (например, недавно созданный аккаунт в Discord, негативная репутация и т. д.).</li>
+        </ol>
+      </div>
     </div>
 
     <div class="reg-form">
@@ -1443,7 +1484,7 @@ const TRANSLATIONS = {
     hero_date:        '21 марта 2026 · 19:00 МСК',
     reg_kicker:       '— Участие —',
     reg_title:        'Регистрация команды',
-    reg_hint:         'Заполните каждое поле. Разделители <span style="color:var(--blood);font-style:normal;">/</span> проставляются автоматически. Вопросы — в нашем',
+    reg_hint:         'Участники должны находиться на сервере Discord с момента подачи заявки до окончания турнира. Все детали турнира — на нашем',
     reg_discord_link: 'Discord',
     field_01:         '01 &nbsp;·&nbsp; Название команды',
     field_02:         '02 &nbsp;·&nbsp; Состав',
@@ -1482,6 +1523,8 @@ const TRANSLATIONS = {
     err_no_session:     '⚠ Сначала войдите через Discord',
     err_too_early:      '⏱ Слишком рано. Дождитесь окончания cooldown.',
     err_fill_fields:    '⚠ Заполните все поля перед отправкой',
+    err_nick_chars:     '⚠ Ник содержит недопустимые символы',
+    err_discord_chars:  '⚠ Неверный формат Discord username',
     err_captcha:        '⚠ Пройдите проверку hCaptcha',
     err_send:           'Ошибка отправки. Попробуйте ещё раз.',
     preview_registered: 'Зарегистрировал',
@@ -1490,6 +1533,11 @@ const TRANSLATIONS = {
     auth_warning:       'После отправки заявки, вы ещё раз закинуть не сможете,\nвы даже повторно авторизоваться не сможете (лохи)',
     footer_error:       'наебнулись и отправили заявку с ошибкой? обращайтесь к соулесу в дискорде',
     overlay_auth:       'Сначала авторизуйся через Discord',
+    rules_title:        '— Детали регистрации —',
+    rule_1:             'Допускаются только ники, содержащие кириллические или латинские буквы. Спецсимволы, смайлики и символы других письменностей не разрешены.',
+    rule_2:             'Ники указывайте без ошибок — они будут добавлены в «Allowed players list / Список участников».',
+    rule_3:             'Ник должен быть защищён паролем и принадлежать вам.',
+    rule_4:             'Мы оставляем за собой право отклонить заявку без объяснения причин (например, недавно созданный аккаунт в Discord, негативная репутация и т. д.).',
     warn_2x2_max:       '⚠ Максимум 2 игрока',
     warn_1x1_max:       '⚠ Только 1 игрок',
     warn_2x2_exact:     '⚠ Выберите ровно 2 игрока для 2×2',
@@ -1527,7 +1575,7 @@ const TRANSLATIONS = {
     hero_date:        'March 21, 2026 · 19:00 MSK',
     reg_kicker:       '— Participation —',
     reg_title:        'Team Registration',
-    reg_hint:         'Fill in every field. Separators <span style="color:var(--blood);font-style:normal;">/</span> are added automatically. Questions — in our',
+    reg_hint:         'All participants must remain on the Discord server from the moment of registration until the end of the tournament. Full tournament details — on our',
     reg_discord_link: 'Discord',
     field_01:         '01 &nbsp;·&nbsp; Team Name',
     field_02:         '02 &nbsp;·&nbsp; Roster',
@@ -1566,6 +1614,8 @@ const TRANSLATIONS = {
     err_no_session:     '⚠ Please log in via Discord first',
     err_too_early:      '⏱ Too soon. Wait for the cooldown to expire.',
     err_fill_fields:    '⚠ Please fill in all fields before submitting',
+    err_nick_chars:     '⚠ Nickname contains invalid characters',
+    err_discord_chars:  '⚠ Invalid Discord username format',
     err_captcha:        '⚠ Please complete the hCaptcha check',
     err_send:           'Submission error. Please try again.',
     preview_registered: 'Registered by',
@@ -1574,6 +1624,11 @@ const TRANSLATIONS = {
     auth_warning:       'Once submitted, you won\'t be able to do it again,\nyou won\'t even be able to re-authenticate (losers)',
     footer_error:       'messed up and submitted with an error? contact the admin on Discord',
     overlay_auth:       'Log in via Discord first',
+    rules_title:        '— Registration Details —',
+    rule_1:             'Only nicknames containing Cyrillic or Latin letters are allowed. Special characters, emojis, and other scripts are not permitted.',
+    rule_2:             'Enter nicknames accurately — they will be added to the Allowed Players List.',
+    rule_3:             'Your nickname must be password-protected and belong to you.',
+    rule_4:             'We reserve the right to reject an application without explanation (e.g. recently created Discord account, negative reputation, etc.).',
     warn_2x2_max:       '⚠ Max 2 players',
     warn_1x1_max:       '⚠ Only 1 player',
     warn_2x2_exact:     '⚠ Select exactly 2 players for 2×2',
@@ -1755,9 +1810,29 @@ function t(key) {
       this.value = this.value.replace(/[^0-9]/g, '');
     });
   });
+
+  // Discord username: строчные, цифры, точка, подчёркивание
   ['p1c','p2c','p3c','p4c'].forEach(id => {
     document.getElementById(id).addEventListener('input', function() {
-      this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
+      // Принудительно в нижний регистр, убираем всё кроме допустимых символов
+      this.value = this.value.toLowerCase().replace(/[^a-z0-9_.]/g, '');
+      // Подсветка: убираем ошибку если формат верный, добавляем если нет
+      if (this.value && !validateDiscord(this.value)) {
+        this.classList.add('error');
+      } else {
+        this.classList.remove('error');
+      }
+    });
+  });
+
+  // Nickname: подсветка при вводе недопустимых символов
+  ['p1a','p2a','p3a','p4a'].forEach(id => {
+    document.getElementById(id).addEventListener('input', function() {
+      if (this.value && !validateNick(this.value)) {
+        this.classList.add('error');
+      } else {
+        this.classList.remove('error');
+      }
     });
   });
 
@@ -1796,17 +1871,55 @@ function t(key) {
   function markError(id) { document.getElementById(id).classList.add('error'); }
   function clearErrors() { allInputIds.forEach(id => document.getElementById(id).classList.remove('error')); }
 
+  // Nickname: кириллица, латиница, цифры, _ и - (пробелы допускаются внутри)
+  const NICK_RE = /^[\p{Script=Cyrillic}\p{Script=Latin}0-9_\-\s]+$/u;
+  // Discord username (новый формат): строчные латиница/цифры, точка и подчёркивание, 2–32 символа, без точки в начале/конце, без двух точек подряд
+  const DISCORD_RE = /^(?![._])(?!.*[.]{2})[a-z0-9_.]{2,32}(?<![.])$/;
+
+  function validateNick(val) { return val && NICK_RE.test(val); }
+  function validateDiscord(val) { return val && DISCORD_RE.test(val); }
+
   function validate() {
     clearErrors();
     let ok = true;
+    let nickErr = false, discordErr = false;
+
     if (!g('teamName')) { markError('teamName'); ok = false; }
+
     ['1','2','3','4'].forEach(n => {
-      if (!g('p'+n+'a')) { markError('p'+n+'a'); ok = false; }
-      if (!g('p'+n+'b')) { markError('p'+n+'b'); ok = false; }
-      if (!g('p'+n+'c')) { markError('p'+n+'c'); ok = false; }
+      const nick    = g('p'+n+'a');
+      const accId   = g('p'+n+'b');
+      const discord = g('p'+n+'c');
+
+      if (!nick) {
+        markError('p'+n+'a'); ok = false;
+      } else if (!validateNick(nick)) {
+        markError('p'+n+'a'); ok = false; nickErr = true;
+      }
+
+      if (!accId) { markError('p'+n+'b'); ok = false; }
+
+      if (!discord) {
+        markError('p'+n+'c'); ok = false;
+      } else if (!validateDiscord(discord)) {
+        markError('p'+n+'c'); ok = false; discordErr = true;
+      }
     });
+
     if (get2x2().length !== 2) { document.getElementById('warn2x2').textContent = t('warn_2x2_exact'); ok = false; }
     if (get1x1().length !== 1) { document.getElementById('warn1x1').textContent = t('warn_1x1_exact'); ok = false; }
+
+    // Показываем конкретную ошибку в статусе если поля заполнены но невалидны
+    if (!ok) {
+      if (nickErr) {
+        regStatus.textContent = t('err_nick_chars');
+        regStatus.className = 'reg-status error';
+      } else if (discordErr) {
+        regStatus.textContent = t('err_discord_chars');
+        regStatus.className = 'reg-status error';
+      }
+    }
+
     return ok;
   }
 
@@ -1832,8 +1945,11 @@ function t(key) {
 
     // Form validation
     if (!validate()) {
-      regStatus.textContent = t('err_fill_fields');
-      regStatus.classList.add('error');
+      // validate() уже выставил конкретное сообщение если проблема в символах
+      if (!regStatus.textContent) {
+        regStatus.textContent = t('err_fill_fields');
+        regStatus.classList.add('error');
+      }
       return;
     }
 
@@ -2015,6 +2131,8 @@ function applyLang(lang) {
     } else if (key === 'overlay_auth') {
       const parts = T[key].split('Discord');
       el.innerHTML = parts[0] + '<span>Discord</span>' + (parts[1] || '');
+    } else if (key.startsWith('rule_') || key === 'rules_title') {
+      el.textContent = T[key];
     } else {
       el.textContent = T[key];
     }
