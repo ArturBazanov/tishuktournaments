@@ -1448,6 +1448,9 @@ const TRANSLATIONS = {
     field_01:         '01 &nbsp;·&nbsp; Название команды',
     field_02:         '02 &nbsp;·&nbsp; Состав',
     field_03:         '03 &nbsp;·&nbsp; Шоу-матчи',
+    preview_field_01: 'Название команды',
+    preview_field_02: 'Состав',
+    preview_field_03: 'Шоу-матчи',
     team_placeholder: 'Введите название команды',
     captain_label:    'Капитан',
     player1_label:    'Игрок 1',
@@ -1528,6 +1531,9 @@ const TRANSLATIONS = {
     field_01:         '01 &nbsp;·&nbsp; Team Name',
     field_02:         '02 &nbsp;·&nbsp; Roster',
     field_03:         '03 &nbsp;·&nbsp; Show Matches',
+    preview_field_01: 'Team Name',
+    preview_field_02: 'Roster',
+    preview_field_03: 'Show Matches',
     team_placeholder: 'Enter team name',
     captain_label:    'Captain',
     player1_label:    'Player 1',
@@ -1727,13 +1733,13 @@ function t(key) {
       t('meta_val_date'),
       '─────────────────────────',
       '',
-      `1) ${t('field_01').replace(/^01\s*·\s*/, '')}: ${p.teamName || '—'}`,
+      `1) ${t('preview_field_01')}: ${p.teamName || '—'}`,
       discordSession ? `   ${t('preview_registered')}: ${discordSession.tag} (ID: ${discordSession.id})` : '',
       '',
-      `2) ${t('field_02').replace(/^02\s*·\s*/, '')}:`,
+      `2) ${t('preview_field_02')}:`,
       ...p.players.map((pl, i) => `${i+1}) ${pl || '—'}`),
       '',
-      `3) ${t('field_03').replace(/^03\s*·\s*/, '')}:`,
+      `3) ${t('preview_field_03')}:`,
       `2×2 (+10 000 PTS): ${p.showmatch.twoVtwo || '—'}`,
       `1×1 (+5 000 PTS):  ${p.showmatch.oneVone || '—'}`,
     ].filter(l => l !== undefined).join('\n');
@@ -1849,7 +1855,15 @@ function t(key) {
         body: JSON.stringify({ session: discordSession.raw, captchaToken, ...payload }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({ error: res.status === 429 ? 'cooldown' : 'captcha_failed' }));
+
+      // Map HTTP status codes to error types if data.error missing
+      if (!data.ok && !data.error) {
+        if (res.status === 429) data.error = 'cooldown';
+        else if (res.status === 403) data.error = 'captcha_failed';
+        else if (res.status === 409) data.error = 'already_registered';
+        else data.error = 'unknown';
+      }
 
       if (data.ok) {
         localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
