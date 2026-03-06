@@ -1084,7 +1084,7 @@
       </div>
       <div class="meta-row">
         <span class="meta-key" data-i18n="meta_date">Дата</span>
-        <span class="meta-val hl">21.03.2026, 19:00 МСК</span>
+        <span class="meta-val hl" data-i18n="meta_val_date">21.03.2026, 19:00 МСК</span>
       </div>
       <div class="meta-row">
         <span class="meta-key" data-i18n="meta_prize">Призовой фонд</span>
@@ -1468,7 +1468,7 @@
     syncShowmatches();
   }));
 
-  function playerName(n) { return g('p'+n+'a') || ('Игрок ' + n); }
+  function playerName(n) { return g('p'+n+'a') || (t('player1_label').replace('1', n)); }
 
   // ── Preview ──────────────────────────────────────
   function buildPayload() {
@@ -1495,16 +1495,16 @@
     previewBox.classList.add('visible');
     previewText.textContent = [
       'TISHUK TOURNAMENTS — MegaSplit Full 4×4',
-      '21.03.2026, 19:00 МСК',
+      t('meta_val_date'),
       '─────────────────────────',
       '',
-      `1) Team Name: ${p.teamName || '—'}`,
-      discordSession ? `   Зарегистрировал: ${discordSession.tag} (ID: ${discordSession.id})` : '',
+      `1) ${t('field_01').replace(/^01\s*·\s*/, '')}: ${p.teamName || '—'}`,
+      discordSession ? `   ${t('preview_registered')}: ${discordSession.tag} (ID: ${discordSession.id})` : '',
       '',
-      '2) Состав:',
+      `2) ${t('field_02').replace(/^02\s*·\s*/, '')}:`,
       ...p.players.map((pl, i) => `${i+1}) ${pl || '—'}`),
       '',
-      '3) Шоу-матчи:',
+      `3) ${t('field_03').replace(/^03\s*·\s*/, '')}:`,
       `2×2 (+10 000 PTS): ${p.showmatch.twoVtwo || '—'}`,
       `1×1 (+5 000 PTS):  ${p.showmatch.oneVone || '—'}`,
     ].filter(l => l !== undefined).join('\n');
@@ -1578,7 +1578,7 @@
 
     // Session check
     if (!discordSession) {
-      regStatus.textContent = '⚠ Сначала войдите через Discord';
+      regStatus.textContent = t('err_no_session');
       regStatus.classList.add('error');
       return;
     }
@@ -1586,14 +1586,14 @@
     // Cooldown
     const last = parseInt(localStorage.getItem(COOLDOWN_KEY) || '0');
     if (last && Date.now() - last < COOLDOWN_MS) {
-      regStatus.textContent = '⏱ Слишком рано. Дождитесь окончания cooldown.';
+      regStatus.textContent = t('err_too_early');
       regStatus.classList.add('error');
       return;
     }
 
     // Form validation
     if (!validate()) {
-      regStatus.textContent = '⚠ Заполните все поля перед отправкой';
+      regStatus.textContent = t('err_fill_fields');
       regStatus.classList.add('error');
       return;
     }
@@ -1601,7 +1601,7 @@
     // hCaptcha
     const captchaEl = document.querySelector('[name="h-captcha-response"]');
     if (!captchaEl || !captchaEl.value) {
-      regStatus.textContent = '⚠ Пройдите проверку hCaptcha';
+      regStatus.textContent = t('err_captcha');
       regStatus.classList.add('error');
       return;
     }
@@ -1649,7 +1649,7 @@
         submitBtn.disabled = false;
         submitBtn.textContent = (typeof t === 'function') ? t('submit_btn') : 'Submit';
       } else if (data.error === 'cooldown') {
-        regStatus.textContent = (lang === 'en') ? '⏱ Too many attempts. Please wait before trying again.' : '⏱ Слишком много попыток. Подождите перед повторной отправкой.';
+        regStatus.textContent = t('cooldown_msg') + ' …';
         regStatus.classList.add('error');
         submitBtn.disabled = false;
         submitBtn.textContent = (typeof t === 'function') ? t('submit_btn') : 'Submit';
@@ -1663,7 +1663,7 @@
         throw new Error(data.error);
       }
     } catch(e) {
-      regStatus.textContent = '✕ ' + (lang === 'en' ? 'Submission error. Please try again.' : 'Ошибка отправки. Попробуйте ещё раз.');
+      regStatus.textContent = '✕ ' + t('err_send');
       regStatus.classList.add('error');
       submitBtn.disabled = false;
       submitBtn.textContent = (typeof t === 'function') ? t('submit_btn') : 'Submit';
@@ -1687,20 +1687,19 @@
       const now = new Date();
       const diffReg = REG_CLOSE - now;
       if (diffReg <= 0) {
-        regDeadlineEl.innerHTML = '<span style="color:var(--blood);">⛔ Регистрация закрыта</span>';
-        // disable submit
+        regDeadlineEl.innerHTML = `<span style="color:var(--blood);">${t('reg_closed')}</span>`;
         const btn = document.getElementById('submitBtn');
-        if (btn) { btn.disabled = true; btn.textContent = 'Регистрация закрыта'; }
+        if (btn) { btn.disabled = true; btn.textContent = t('reg_closed_btn'); }
       } else {
         const d = Math.floor(diffReg / 86400000);
         const h = Math.floor((diffReg % 86400000) / 3600000);
         const m = Math.floor((diffReg % 3600000) / 60000);
         const s = Math.floor((diffReg % 60000) / 1000);
-        const urgent = diffReg < 3600000; // less than 1 hour
+        const urgent = diffReg < 3600000;
         regDeadlineEl.innerHTML =
           `<span style="color:${urgent ? 'var(--blood)' : 'rgba(212,207,200,0.5)'};">` +
-          `${urgent ? '⚠ ' : ''}Регистрация закрывается через: ` +
-          `<strong style="color:var(--bone);font-style:normal;">${d > 0 ? d+'д ' : ''}${pad(h)}:${pad(m)}:${pad(s)}</strong>` +
+          `${urgent ? t('reg_closing_urgent') : t('reg_closing_in')} ` +
+          `<strong style="color:var(--bone);font-style:normal;">${d > 0 ? d + t('days_short') + ' ' : ''}${pad(h)}:${pad(m)}:${pad(s)}</strong>` +
           `</span>`;
       }
     }
@@ -1815,7 +1814,19 @@ const TRANSLATIONS = {
     err_not_in_guild: '⛔ Вы должны быть участником сервера TISHUK TOURNAMENTS в Discord',
     success_msg:      '✓ Заявка успешно отправлена!',
     submit_sending:   'Отправка…',
-    cooldown_msg:     '⏱ Следующая заявка через',
+    cooldown_msg:       '⏱ Следующая заявка через',
+    reg_closed:         '⛔ Регистрация закрыта',
+    reg_closing_in:     'Регистрация закрывается через:',
+    reg_closing_urgent: '⚠ Регистрация закрывается через:',
+    reg_closed_btn:     'Регистрация закрыта',
+    err_no_session:     '⚠ Сначала войдите через Discord',
+    err_too_early:      '⏱ Слишком рано. Дождитесь окончания cooldown.',
+    err_fill_fields:    '⚠ Заполните все поля перед отправкой',
+    err_captcha:        '⚠ Пройдите проверку hCaptcha',
+    err_send:           'Ошибка отправки. Попробуйте ещё раз.',
+    preview_registered: 'Зарегистрировал',
+    days_short:         'д',
+    meta_val_date:      '21.03.2026, 19:00 МСК',
   },
   en: {
     org_tag:          'Tishuk Tournaments — presents',
@@ -1876,7 +1887,19 @@ const TRANSLATIONS = {
     err_not_in_guild: '⛔ You must be a member of the TISHUK TOURNAMENTS Discord server to register',
     success_msg:      '✓ Application submitted successfully!',
     submit_sending:   'Sending…',
-    cooldown_msg:     '⏱ Next submission in',
+    cooldown_msg:       '⏱ Next submission in',
+    reg_closed:         '⛔ Registration closed',
+    reg_closing_in:     'Registration closes in:',
+    reg_closing_urgent: '⚠ Registration closes in:',
+    reg_closed_btn:     'Registration closed',
+    err_no_session:     '⚠ Please log in via Discord first',
+    err_too_early:      '⏱ Too soon. Wait for the cooldown to expire.',
+    err_fill_fields:    '⚠ Please fill in all fields before submitting',
+    err_captcha:        '⚠ Please complete the hCaptcha check',
+    err_send:           'Submission error. Please try again.',
+    preview_registered: 'Registered by',
+    days_short:         'd',
+    meta_val_date:      '21.03.2026, 19:00 MSK',
   }
 };
 
