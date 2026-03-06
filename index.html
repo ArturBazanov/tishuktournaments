@@ -1502,7 +1502,7 @@
   allInputIds.forEach(id => document.getElementById(id).addEventListener('input', updatePreview));
 
   // ── Cooldown ─────────────────────────────────────
-  const COOLDOWN_MS  = 6 * 60 * 60 * 1000;
+  const COOLDOWN_MS  = 10 * 1000; // 10 сек (тест)
   const COOLDOWN_KEY = 'tt_last_submit';
 
   function startCooldownTicker() {
