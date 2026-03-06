@@ -1410,7 +1410,7 @@
       history.replaceState({}, '', location.pathname);
       // scroll to reg and show error
       document.getElementById('authBlock').querySelector('.auth-hint').innerHTML =
-        `<span style="color:var(--blood);">⛔ ${currentLang === 'en' ? 'Account' : 'Аккаунт'} @${username} ${currentLang === 'en' ? 'has already submitted an application' : 'уже подавал заявку'}</span>`;
+        `<span style="color:var(--blood);">⛔ ${(localStorage.getItem('tt_lang') || 'ru') === 'en' ? 'Account' : 'Аккаунт'} @${username} ${(localStorage.getItem('tt_lang') || 'ru') === 'en' ? 'has already submitted an application' : 'уже подавал заявку'}</span>`;
     } else if (auth === 'error') {
       history.replaceState({}, '', location.pathname);
     } else {
