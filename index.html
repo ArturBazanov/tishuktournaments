@@ -1584,7 +1584,8 @@ function setLang(lang) {
 }
 
 function t(key) {
-  return TRANSLATIONS[currentLang][key] || TRANSLATIONS.ru[key] || key;
+  const lang = localStorage.getItem('tt_lang') || 'ru';
+  return (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) || TRANSLATIONS.ru[key] || key;
 }
 </script>
 
