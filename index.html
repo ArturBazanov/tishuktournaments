@@ -1399,11 +1399,14 @@
     const auth   = params.get('auth');
     const sessionB64 = params.get('session');
 
+    console.log('[AUTH DEBUG] auth=', auth, 'session=', sessionB64 ? sessionB64.substring(0, 30) + '...' : null);
+
     if (auth === 'ok' && sessionB64) {
       sessionStorage.setItem('tt_discord_session', sessionB64);
       // Clean URL
       history.replaceState({}, '', location.pathname);
       const session = loadSession();
+      console.log('[AUTH DEBUG] loadSession=', session);
       if (session) showAuthed(session);
     } else if (auth === 'duplicate') {
       const username = params.get('username') || '';
