@@ -367,6 +367,40 @@
       padding: 3rem;
       position: relative;
     }
+    .reg-form-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      background: rgba(10,10,10,0.82);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      cursor: default;
+      transition: opacity 0.4s ease;
+    }
+    .reg-form-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .reg-form-overlay-icon {
+      font-size: 2rem;
+      opacity: 0.5;
+    }
+    .reg-form-overlay-text {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(212,207,200,0.45);
+      text-align: center;
+    }
+    .reg-form-overlay-text span {
+      color: var(--blood);
+    }
     .reg-form::before {
       content: '';
       position: absolute;
@@ -738,6 +772,9 @@
 
     .discord-auth-block {
       margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .discord-login-btn {
       display: inline-flex;
@@ -1210,6 +1247,15 @@
 
     <div class="reg-form">
 
+      <!-- FIELDS WRAPPER with AUTH GATE OVERLAY -->
+      <div style="position:relative;">
+        <div class="reg-form-overlay" id="regFormOverlay">
+          <div class="reg-form-overlay-icon">🔒</div>
+          <div class="reg-form-overlay-text" id="regFormOverlayText" data-i18n="overlay_auth">
+            Сначала <span>авторизуйся через Discord</span>
+          </div>
+        </div>
+
       <!-- TEAM NAME -->
       <div class="field-group">
         <div class="field-label">01 &nbsp;·&nbsp; Название команды</div>
@@ -1315,10 +1361,12 @@
         <pre class="preview-text" id="previewText"></pre>
       </div>
 
+      </div><!-- end fields wrapper -->
+
       <!-- SUBMIT -->
       <!-- Шаг 1: войти через Discord -->
-      <div class="discord-auth-block" id="authBlock">
-        <p data-i18n="auth_warning" style="margin-bottom:0.75rem;font-size:0.85rem;color:#ccc;line-height:1.5;text-align:center;">
+      <div class="discord-auth-block" id="authBlock" style="display:flex;flex-direction:column;align-items:center;">
+        <p data-i18n="auth_warning" style="margin-bottom:0.6rem;font-size:0.85rem;color:#ccc;line-height:1.5;text-align:center;">
           После отправки заявки, вы ещё раз закинуть не сможете,<br>вы даже повторно авторизоваться не сможете <span style="color:#aaa;">(лохи)</span>
         </p>
         <button class="discord-login-btn" id="discordLoginBtn">
@@ -1326,6 +1374,10 @@
           Войти через Discord
         </button>
         <p class="auth-hint">Требуется для защиты от повторных заявок</p>
+        <p data-i18n="footer_error" style="margin-top:0.4rem;font-size:0.75rem;color:#666;text-align:center;">
+          наебнулись и отправили заявку с ошибкой? обращайтесь к соулесу в дискорде
+          <a href="https://discord.com/users/arturio2801" target="_blank" style="color:#e74c3c;text-decoration:none;font-weight:600;">@arturio2801</a>
+        </p>
       </div>
 
       <!-- Шаг 2: авторизован — показываем форму отправки -->
@@ -1354,10 +1406,6 @@
 <footer>
   <div class="footer-logo">TISHUK TOURNAMENTS</div>
   <p class="footer-copy">© 2026 — MegaSplit Full 4×4 · 21.03.2026, 19:00 МСК</p>
-  <p data-i18n="footer_error" style="margin-top:0.5rem;font-size:0.8rem;color:#888;">
-    наебнулись и отправили заявку с ошибкой? обращайтесь к соулесу в дискорде
-    <a href="https://discord.com/users/arturio2801" target="_blank" style="color:#e74c3c;text-decoration:none;font-weight:600;">@arturio2801</a>
-  </p>
 </footer>
 
 <script>
@@ -1412,6 +1460,8 @@
   function showAuthed(session) {
     document.getElementById('authBlock').style.display   = 'none';
     document.getElementById('authedBlock').style.display = 'block';
+    const overlay = document.getElementById('regFormOverlay');
+    if (overlay) overlay.classList.add('hidden');
     document.getElementById('authedUser').textContent    = `Discord: ${session.tag}`;
     discordSession = session;
     // re-render captcha if needed
@@ -1846,6 +1896,7 @@ const TRANSLATIONS = {
     meta_val_date:      '21.03.2026, 19:00 МСК',
     auth_warning:       'После отправки заявки, вы ещё раз закинуть не сможете,\nвы даже повторно авторизоваться не сможете (лохи)',
     footer_error:       'наебнулись и отправили заявку с ошибкой? обращайтесь к соулесу в дискорде',
+    overlay_auth:       'Сначала авторизуйся через Discord',
   },
   en: {
     org_tag:          'Tishuk Tournaments — presents',
@@ -1921,6 +1972,7 @@ const TRANSLATIONS = {
     meta_val_date:      '21.03.2026, 19:00 MSK',
     auth_warning:       'Once submitted, you won\'t be able to do it again,\nyou won\'t even be able to re-authenticate (losers)',
     footer_error:       'messed up and submitted with an error? contact the admin on Discord',
+    overlay_auth:       'Log in via Discord first',
   }
 };
 
@@ -1948,6 +2000,9 @@ function applyLang(lang) {
       el.innerHTML = T[key].replace('\n', '<br>');
     } else if (key === 'footer_error') {
       el.innerHTML = T[key] + ' <a href="https://discord.com/users/arturio2801" target="_blank" style="color:#e74c3c;text-decoration:none;font-weight:600;">@arturio2801</a>';
+    } else if (key === 'overlay_auth') {
+      const parts = T[key].split('Discord');
+      el.innerHTML = parts[0] + '<span>Discord</span>' + (parts[1] || '');
     } else {
       el.textContent = T[key];
     }
