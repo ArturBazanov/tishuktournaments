@@ -1382,7 +1382,11 @@
     try {
       const raw = sessionStorage.getItem('tt_discord_session');
       if (!raw) return null;
-      const s = JSON.parse(atob(raw));
+      // Новый формат: "base64payload.base64sig"
+      const dotIdx = raw.lastIndexOf('.');
+      if (dotIdx === -1) { sessionStorage.removeItem('tt_discord_session'); return null; }
+      const payload = raw.slice(0, dotIdx);
+      const s = JSON.parse(atob(payload));
       if (Date.now() > s.exp) { sessionStorage.removeItem('tt_discord_session'); return null; }
       return { raw, ...s };
     } catch { return null; }
@@ -1607,12 +1611,13 @@
     regStatus.textContent = (typeof t === 'function') ? t('submit_sending') : 'Sending…';
 
     const payload = buildPayload();
+    const captchaToken = captchaEl.value;
 
     try {
       const res = await fetch(WORKER_URL + '/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ session: discordSession.raw, ...payload }),
+        body: JSON.stringify({ session: discordSession.raw, captchaToken, ...payload }),
       });
 
       const data = await res.json();
@@ -1641,6 +1646,17 @@
       } else if (data.error === 'not_in_guild') {
         regStatus.textContent = (typeof t === 'function') ? t('err_not_in_guild') : '⛔ You must be a member of the TISHUK TOURNAMENTS Discord server to register';
         regStatus.classList.add('error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = (typeof t === 'function') ? t('submit_btn') : 'Submit';
+      } else if (data.error === 'cooldown') {
+        regStatus.textContent = (lang === 'en') ? '⏱ Too many attempts. Please wait before trying again.' : '⏱ Слишком много попыток. Подождите перед повторной отправкой.';
+        regStatus.classList.add('error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = (typeof t === 'function') ? t('submit_btn') : 'Submit';
+      } else if (data.error === 'captcha_failed') {
+        regStatus.textContent = (lang === 'en') ? '⚠ Captcha check failed. Please try again.' : '⚠ Проверка капчи не прошла. Попробуйте ещё раз.';
+        regStatus.classList.add('error');
+        if (window.hcaptcha) window.hcaptcha.reset();
         submitBtn.disabled = false;
         submitBtn.textContent = (typeof t === 'function') ? t('submit_btn') : 'Submit';
       } else {
