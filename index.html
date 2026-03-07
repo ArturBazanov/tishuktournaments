@@ -2710,7 +2710,9 @@ const TRANSLATIONS = {
     tournament_started: 'Турнир начался! 🏆',
     err_duplicate:    'Э уёбок, ты уже подал заявку, а ну пшёл вон',
     err_team_exists:  '⛔ Команда с таким названием уже зарегистрирована',
-    err_not_in_guild: '⛔ Вы должны быть участником сервера TISHUK TOURNAMENTS в Discord',
+    err_not_in_guild:        '⛔ Вы должны быть участником сервера TISHUK TOURNAMENTS в Discord',
+    err_email_not_verified:  '⛔ Подтвердите e-mail в Discord перед регистрацией',
+    err_account_too_new:     '⛔ Аккаунт Discord должен быть зарегистрирован более 5 минут назад',
     success_msg:      '✓ Заявка успешно отправлена!',
     submit_sending:   'Отправка…',
     cooldown_msg:       '⏱ Следующая заявка через',
@@ -2831,7 +2833,9 @@ const TRANSLATIONS = {
     tournament_started: 'Tournament has started! 🏆',
     err_duplicate:    'Bro you already submitted, get outta here',
     err_team_exists:  '⛔ A team with this name is already registered',
-    err_not_in_guild: '⛔ You must be a member of the TISHUK TOURNAMENTS Discord server to register',
+    err_not_in_guild:        '⛔ You must be a member of the TISHUK TOURNAMENTS Discord server to register',
+    err_email_not_verified:  '⛔ Please verify your e-mail in Discord before registering',
+    err_account_too_new:     '⛔ Your Discord account must be older than 5 minutes',
     success_msg:      '✓ Application submitted successfully!',
     submit_sending:   'Sending…',
     cooldown_msg:       '⏱ Next submission in',
@@ -2978,6 +2982,16 @@ function t(key) {
         `<span style="color:var(--blood);">${t('err_duplicate')}</span>`;
     } else if (auth === 'error') {
       history.replaceState({}, '', location.pathname);
+      const reason = params.get('reason');
+      const reasonMsgMap = {
+        email_not_verified: 'err_email_not_verified',
+        account_too_new:    'err_account_too_new',
+      };
+      const msgKey = reasonMsgMap[reason];
+      if (msgKey) {
+        document.getElementById('authBlock').querySelector('.auth-hint').innerHTML =
+          `<span style="color:var(--blood);">${t(msgKey)}</span>`;
+      }
     } else {
       // Try existing session
       const session = loadSession();
